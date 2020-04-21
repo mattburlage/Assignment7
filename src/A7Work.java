@@ -116,6 +116,53 @@ public class A7Work {
 		//Configure this method to perform a radix sort on an array of Strings of various lengths
 		//use the version below that requires all the strings to be the same length as a starting point
 		//very little should need to be modified for this to work
+
+		//number of buckets = 256 (characters in the character set)
+		int bucketCount = 256;
+		//if you were doing a case insensitive sort, and you knew everything was single words, you could use 26 as your size
+
+		//Buckets need to be lists instead of counters
+		List<String>[] buckets = new LinkedList[bucketCount];
+		//create array of lists and initialize each object
+		for(int i = 0; i < buckets.length; i++)
+		{
+			buckets[i] = new LinkedList<>();
+		}
+
+		int stringLen = 0;
+		for (String s : arr) {
+			if (s.length() > stringLen) stringLen = s.length();
+		}
+
+		//loop from end of string to beginning
+		for(int strpos = stringLen-1; strpos >= 0; strpos--)
+		{
+			//loop through each string
+			for (String item : arr) {
+				//add to appropriate bucket
+				if (item.length() - 1 > strpos) {
+
+					buckets[item.charAt(strpos)].add(item);
+				} else {
+					buckets[0].add(item);
+				}
+
+			}
+			//pointer for position in original list
+			int pos = 0;
+			//loop through buckets
+			for (List<String> bucket : buckets) {
+				//loop through items in each buck
+				for (String item : bucket) {
+					//add each string back to original array in new order
+					arr[pos] = item;
+					pos++;
+				}
+				//clear the bucket
+				bucket.clear();//O(1)
+			}
+			System.out.println("Sorted on "+strpos+" : "+Arrays.toString(arr));
+		}
 	}
 	
 	/*DO NOT MODIFY*/
